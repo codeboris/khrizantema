@@ -1,0 +1,50 @@
+<?php
+/* @var $this yii\web\View */
+
+use shop\entities\Shop\Product\Product;
+use shop\helpers\PriceHelper;
+use yii\grid\ActionColumn;
+use yii\grid\GridView;
+use yii\helpers\Html;
+
+$this->title = 'Избранное - ' . Yii::$app->name;
+
+$this->params['breadcrumbs'][] = ['label' => 'Кабинет', 'url' => ['cabinet/default/index']];
+$this->params['breadcrumbs'][] = 'Избранное';
+
+?>
+<div class="wishlist-index">
+
+
+    <?= GridView::widget([
+        'dataProvider' => $dataProvider,
+        'columns' => [
+            [
+                'value' => function (Product $model) {
+                    return $model->mainPhoto ? Html::img($model->mainPhoto->getThumbFileUrl('file', 'admin')) : null;
+                },
+                'format' => 'raw',
+                'contentOptions' => ['style' => 'width: 100px'],
+            ],
+            //'id',
+            [
+                'attribute' => 'Название',
+                'value' => function (Product $model) {
+                    return Html::a(Html::encode($model->name), ['/shop/catalog/product', 'id' => $model->id]);
+                },
+                'format' => 'raw',
+            ],
+            [
+                'attribute' => 'Цена',
+                'value' => function (Product $model) {
+                    return PriceHelper::format($model->price_new);
+                },
+            ],
+            [
+                'class' => ActionColumn::class,
+                'template' => '{delete}',
+            ],
+        ],
+    ]); ?>
+
+</div>
